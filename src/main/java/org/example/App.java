@@ -13,16 +13,36 @@ public class App {
 
         Session session = sessionFactory.getCurrentSession();
 
+//        try {
+//            session.beginTransaction();
+//
+//            Person person = session.get(Person.class, 2);
+//            person.setName("Updated2");
+//            session.getTransaction().commit();
+//        } finally {
+//            session.close();
+//        }
+
+//        try {
+//            session.beginTransaction();
+//
+//            Person person = session.get(Person.class, 2);
+//            session.delete(person);
+//
+//            session.getTransaction().commit();
+//        } finally {
+//            session.close();
+//        }
+
         try {
             session.beginTransaction();
 
-            Person person1 = new Person("Test1",30);
-            Person person2 = new Person("Test2",40);
-            Person person3 = new Person("Test3",50);
+            Person person1 = new Person("Test1", 30);
 
             session.save(person1);
-            session.save(person2);
-            session.save(person3);
+            int id = (int) session.getIdentifier(person1);
+            System.out.println(id);
+            System.out.println(person1.getId());
 
             session.getTransaction().commit();
         } finally {
