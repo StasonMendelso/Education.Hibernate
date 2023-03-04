@@ -5,6 +5,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import java.util.List;
+
 public class App {
     public static void main(String[] args) {
         Configuration configuration = new Configuration().addAnnotatedClass(Person.class);
@@ -13,41 +15,17 @@ public class App {
 
         Session session = sessionFactory.getCurrentSession();
 
-//        try {
-//            session.beginTransaction();
-//
-//            Person person = session.get(Person.class, 2);
-//            person.setName("Updated2");
-//            session.getTransaction().commit();
-//        } finally {
-//            session.close();
-//        }
-
-//        try {
-//            session.beginTransaction();
-//
-//            Person person = session.get(Person.class, 2);
-//            session.delete(person);
-//
-//            session.getTransaction().commit();
-//        } finally {
-//            session.close();
-//        }
-
         try {
             session.beginTransaction();
 
-            Person person1 = new Person("Test1", 30);
-
-            session.save(person1);
-            int id = (int) session.getIdentifier(person1);
-            System.out.println(id);
-            System.out.println(person1.getId());
+            int deletedRows = session.createQuery("DELETE FROM Person WHERE age>30").executeUpdate();
+            System.out.println(deletedRows);
 
             session.getTransaction().commit();
         } finally {
-            session.close();
+            sessionFactory.close();
         }
+
     }
 }
 
