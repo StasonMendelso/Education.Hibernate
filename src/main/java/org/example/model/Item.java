@@ -1,42 +1,45 @@
 package org.example.model;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
-import java.util.List;
 
 /**
  * @author Stanislav Hlova
  */
 @Entity
-@Table(name = "Person")
-public class Person {
-
+@Table(name = "Item")
+public class Item {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "age")
-    private int age;
+    @ManyToOne
+    @JoinColumn(name = "person_id",referencedColumnName = "id")
+    private Person owner;
 
-    @OneToMany(mappedBy = "owner")
-    private List<Item> itemList;
-    public Person() {
+    public Item() {
     }
 
-    public Person(String name, int age) {
+    public Item(String name, Person owner) {
         this.name = name;
-        this.age = age;
+        this.owner = owner;
+    }
+
+    public Item(int id, String name, Person owner) {
+        this.id = id;
+        this.name = name;
+        this.owner = owner;
     }
 
     public int getId() {
@@ -55,28 +58,19 @@ public class Person {
         this.name = name;
     }
 
-    public int getAge() {
-        return age;
+    public Person getOwner() {
+        return owner;
     }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public List<Item> getItemList() {
-        return itemList;
-    }
-
-    public void setItemList(List<Item> itemList) {
-        this.itemList = itemList;
+    public void setOwner(Person owner) {
+        this.owner = owner;
     }
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "Item{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", age=" + age +
                 '}';
     }
 }
