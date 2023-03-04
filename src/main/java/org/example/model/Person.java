@@ -8,7 +8,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +33,9 @@ public class Person {
     private int age;
 
     @OneToMany(mappedBy = "owner")
+    @Cascade(CascadeType.SAVE_UPDATE)
     private List<Item> itemList;
+
     public Person() {
     }
 
@@ -69,6 +74,14 @@ public class Person {
 
     public void setItemList(List<Item> itemList) {
         this.itemList = itemList;
+    }
+
+    public void addItem(Item item) {
+        if (this.itemList == null) {
+            this.itemList = new ArrayList<>();
+        }
+        this.itemList.add(item);
+        item.setOwner(this);
     }
 
     @Override
