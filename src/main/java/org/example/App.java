@@ -1,7 +1,9 @@
 package org.example;
 
 import jakarta.persistence.Id;
+import org.example.model.Actor;
 import org.example.model.Item;
+import org.example.model.Movie;
 import org.example.model.Passport;
 import org.example.model.Person;
 import org.hibernate.Session;
@@ -17,7 +19,9 @@ public class App {
         Configuration configuration = new Configuration()
                 .addAnnotatedClass(Person.class)
                 .addAnnotatedClass(Item.class)
-                .addAnnotatedClass(Passport.class);
+                .addAnnotatedClass(Passport.class)
+                .addAnnotatedClass(Movie.class)
+                .addAnnotatedClass(Actor.class);
 
         SessionFactory sessionFactory = configuration.buildSessionFactory();
 
@@ -26,12 +30,17 @@ public class App {
         try {
             session.beginTransaction();
 
-            Passport passport = session.get(Passport.class,1);
-            System.out.println(passport.getPerson().getName());
+            Actor actor = session.get(Actor.class, 2);
+
+            Movie movieToRemove = actor.getMovies().get(0);
+
+            movieToRemove.getActors().remove(actor);
+            actor.getMovies().remove(movieToRemove);
 
             session.getTransaction().commit();
         } finally {
             session.close();
+            sessionFactory.close();
         }
 
     }
