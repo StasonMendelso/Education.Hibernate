@@ -2,6 +2,7 @@ package org.example;
 
 import jakarta.persistence.Id;
 import org.example.model.Item;
+import org.example.model.Passport;
 import org.example.model.Person;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,7 +16,8 @@ public class App {
     public static void main(String[] args) {
         Configuration configuration = new Configuration()
                 .addAnnotatedClass(Person.class)
-                .addAnnotatedClass(Item.class);
+                .addAnnotatedClass(Item.class)
+                .addAnnotatedClass(Passport.class);
 
         SessionFactory sessionFactory = configuration.buildSessionFactory();
 
@@ -24,13 +26,8 @@ public class App {
         try {
             session.beginTransaction();
 
-            Person person = new Person("Test cascading", 30);
-
-            person.addItem(new Item("Item 1"));
-            person.addItem(new Item("Item 2"));
-            person.addItem(new Item("Item 3"));
-
-            session.save(person);
+            Passport passport = session.get(Passport.class,1);
+            System.out.println(passport.getPerson().getName());
 
             session.getTransaction().commit();
         } finally {
